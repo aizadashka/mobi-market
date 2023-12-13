@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import NotFound from'./pages/NotFount'
+import ForgotPassword from './components/ForgotPassword'
 
 function App() {
 
@@ -14,7 +15,8 @@ function App() {
             <Route
               index
               element={<Login />}
-            />  
+            />
+            <Route path='forgot-password' element={<ForgotPassword/>} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

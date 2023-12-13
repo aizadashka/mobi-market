@@ -37,22 +37,30 @@ main {
     flex-direction: column;
     margin: auto;
     width: 50%;
+    position: relative;
+    align-items: center;
+    padding: 0;
 }
 
 .login {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .input-wrapper {
     border-bottom: 0.5px solid #C0C0C0;
     margin-top: 1rem;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
 }
+
 .input {
     padding: 4px 0px;
     border: none;
+    width: 93%;
+    color: inherit;
 }
 
 .input:focus {
@@ -66,16 +74,73 @@ main {
     margin: 0.3rem 0;
 }
 
-.button {
+button {
     border: none;
     background-color: #C0C0C0;
-    border-radius: 30px;
+    border-radius: 16px;
     color: white;
     padding: 10px;
     margin: 1rem 0;
 }
-.eye {
-    display: inline-block;
+
+.active-btn {
+    background-color: #5458EA;
+}
+.active-btn:hover {background-color: #1d24e6}
+
+.active-btn:active {
+  background-color: #1d24e6;
+  transform: translateY(2px);
+}
+
+.icon {
+    font-size: 1.5rem;
+}
+
+#togglePassword {
+    color: initial;
+}
+
+.input-with-eye {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+label {
+    color: #C0C0C0;
+    font-size: 0.875rem;
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.phone-icon {
+    font-size: 3rem;
+    color: #5458EA;
+    margin: 1rem;
+}
+
+.explaining-message {
+    color: #C0C0C0;
+    font-size: 1rem;
+}
+
+#phone {
+    margin: 1rem;
+    border: none;
+    font-weight: 700;
+    text-align: center;
+    padding: 5px;
+}
+.modal button {
+    width: 65%;
 }
 
 /* helpers */
@@ -84,4 +149,8 @@ main {
 }
 .turn-blue {
     color: #5458EA;
+}
+.turn-red {
+    color: #F34545;
+    border-bottom-color: #F34545;
 }

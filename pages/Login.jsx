@@ -1,37 +1,90 @@
 import React from 'react'
+import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom'
-import { FaEye } from "react-icons/fa"
-
+import { IoEyeSharp } from "react-icons/io5"
 
 export default function Login() {
+    const [loginFormData, setLoginFormData] = React.useState({ username: "", password: "" })
+    const [err, setErr] = React.useState('')
+
+    const passwordToggler = document.querySelector("#togglePassword")
+    const passwordInput = document.querySelector("#password")
 
     function togglePassword() {
-        const togglePassword = document.querySelector("#togglePassword")
-        const password = document.querySelector("#password")
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password"
+        passwordInput.setAttribute("type", type)
 
-        const type = password.getAttribute("type") === "password" ? "text" : "password"
-        password.setAttribute("type", type)
-
-        togglePassword.classList.toggle("turn-blue")
+        passwordToggler.classList.toggle("turn-blue")
     }
 
-    return <div className='login-container'>
+    function handleChange(e) {
+        const { name, value } = e.target
+        setLoginFormData(prev => ({
+            ...prev,
+            [name]: value
+        }))
+    }
+
+    function login(e) {
+        e.preventDefault()
+        const src = 'neobook.online/mobi-market/users/login'
+        axios
+            .post(src)
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => {
+                setErr(err)
+                toast.error('Неверный логин или пароль', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "colored",
+                    containerId: 'login-container'
+                })
+            })
+    }
+    
+    return <div className='login-container' id='login-container'>
+        <ToastContainer />
         <form className='login'>
-            <div className='input-wrapper'>
-                <input className='input' required placeholder='Имя пользователя' />
-            </div>
-            <div className='input-wrapper'>
+            <div className={`input-wrapper ${err && 'turn-red'}`}>
+                {loginFormData.username && <label htmlFor='user-name'>Имя пользователя</label>}
                 <input 
-                    className='input' 
                     required 
-                    placeholder='Пароль'
-                    type='password'
-                    id='password'
-                    autoComplete='corrent-password'/>
-                <FaEye className='eye' onClick={togglePassword} id='togglePassword'/>
+                    name='username'
+                    className={`input ${err && 'turn-red'}`}
+                    onChange={handleChange}             
+                    placeholder='Имя пользователя'
+                    type='text' />
             </div>
-            <Link className='link' to='change-password' >Забыли пароль</Link>
-            <button className='button' >Войти</button>
+            <div className={`input-wrapper ${err && 'turn-red'}`}>
+                {loginFormData.password && <label htmlFor='password'>Пароль</label>}
+                <div className='input-with-eye'>
+                    <input 
+                        required
+                        id='password'
+                        name='password'
+                        className={`input ${err && 'turn-red'}`} 
+                        onChange={handleChange}
+                        placeholder='Пароль'
+                        type='password'
+                        autoComplete='corrent-password'/>
+                    <IoEyeSharp className='icon' onClick={togglePassword} id='togglePassword'/>
+                </div>
+            </div>
+            <Link className='link' to='forgot-password' >Забыли пароль</Link>
+            <button 
+                id='login-button'
+                className={`${(loginFormData.password && loginFormData.username) && 'active-btn'}`}
+                onClick={login}
+                disabled={loginFormData.password && loginFormData.username ? false : true}>
+                    Войти
+            </button>
         </form>
         <Link className='link center' to='register' >Зарегистрироваться</Link>
     </div>
