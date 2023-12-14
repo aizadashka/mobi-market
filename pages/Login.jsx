@@ -4,27 +4,40 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom'
 import { IoEyeSharp } from "react-icons/io5"
+import Modal from '../components/ForgotPassword/Modal'
+import { ToggleContext } from '../index'
 
 export default function Login() {
-    const [loginFormData, setLoginFormData] = React.useState({ username: "", password: "" })
+    const [user, setUser] = React.useState({ 
+        username: "", 
+        password: "",
+        phone: '',
+        phoneRecieved: false,
+        verifyCode: '', 
+        verified: false,
+        newPassword: '', 
+        confirmPassword: ''
+    })
+    
+    const togglePassword = React.useContext(ToggleContext)
+
     const [err, setErr] = React.useState('')
+    const [modalIsOpen, setIsOpen] = React.useState(false)
 
-    const passwordToggler = document.querySelector("#togglePassword")
-    const passwordInput = document.querySelector("#password")
-
-    function togglePassword() {
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password"
-        passwordInput.setAttribute("type", type)
-
-        passwordToggler.classList.toggle("turn-blue")
+    function handleSubmit(e) {
+        user.phone = ''
+        user.phoneRecieved = false
+        e.preventDefault()
     }
 
     function handleChange(e) {
-        const { name, value } = e.target
-        setLoginFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
+        const { name, value }= e.target
+        setUser(prev => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        })
     }
 
     function login(e) {
@@ -41,6 +54,7 @@ export default function Login() {
                     autoClose: 5000,
                     hideProgressBar: true,
                     closeOnClick: true,
+                    closeButton: false,
                     pauseOnHover: true,
                     draggable: true,
                     theme: "colored",
@@ -48,12 +62,25 @@ export default function Login() {
                 })
             })
     }
-    
+
+    function openNewModal() {
+        setIsOpen(true)
+    }
+
     return <div className='login-container' id='login-container'>
         <ToastContainer />
+        <Modal 
+            modalIsOpen={modalIsOpen} 
+            setIsOpen={setIsOpen}
+            user={user}
+            setUser={setUser}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            togglePassword={togglePassword}
+        />
         <form className='login'>
             <div className={`input-wrapper ${err && 'turn-red'}`}>
-                {loginFormData.username && <label htmlFor='user-name'>Имя пользователя</label>}
+                {user.username && <label htmlFor='user-name'>Имя пользователя</label>}
                 <input 
                     required 
                     name='username'
@@ -63,7 +90,7 @@ export default function Login() {
                     type='text' />
             </div>
             <div className={`input-wrapper ${err && 'turn-red'}`}>
-                {loginFormData.password && <label htmlFor='password'>Пароль</label>}
+                {user.password && <label htmlFor='password'>Пароль</label>}
                 <div className='input-with-eye'>
                     <input 
                         required
@@ -74,15 +101,20 @@ export default function Login() {
                         placeholder='Пароль'
                         type='password'
                         autoComplete='corrent-password'/>
-                    <IoEyeSharp className='icon' onClick={togglePassword} id='togglePassword'/>
+                    <IoEyeSharp 
+                        className='icon' 
+                        onClick={() => {
+                            togglePassword('passwordToggler', 'password')
+                        }} 
+                        id='passwordToggler'/>
                 </div>
             </div>
-            <Link className='link' to='forgot-password' >Забыли пароль</Link>
+            <Link className='link' to='forgot-password' onClick={openNewModal}>Забыли пароль</Link>
             <button 
                 id='login-button'
-                className={`${(loginFormData.password && loginFormData.username) && 'active-btn'}`}
+                className={`button ${(user.password && user.username) && 'active-btn'}`}
                 onClick={login}
-                disabled={loginFormData.password && loginFormData.username ? false : true}>
+                disabled={user.password && user.username ? false : true}>
                     Войти
             </button>
         </form>

@@ -5,7 +5,7 @@ export default function NotFound() {
     return (
         <div className="not-found-container">
             <h1>Извините, страница, которую вы искали, не найдена.</h1>
-            <Link to="/users" className="link-button">Вернутся на Главную страницу</Link>
+            <Link to="/login" className="link-button">Вернутся на Главную страницу</Link>
         </div>
     )
 }
