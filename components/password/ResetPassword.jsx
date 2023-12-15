@@ -1,8 +1,11 @@
 import React from "react"
 import { FaLock } from "react-icons/fa6"
 import { IoEyeSharp } from "react-icons/io5"
+import { togglePassword, handleChange } from '.../utils'
+import { UserContext } from "../..index"
 
-export default function ResetPassword({user, setUser, handleChange, togglePassword, closeModal}) {
+export default function ResetPassword({closeModal}) {
+    const { user, setUser } = React.useContext(UserContext)
     const [err, setErr] = React.useState(false)
     const [passwordReset, setPasswordReset] = React.useState(false)
 

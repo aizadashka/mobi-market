@@ -4,43 +4,47 @@ import { BrowserRouter, Routes, Route} from "react-router-dom"
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import NotFound from'./pages/NotFount'
-import VerificationCode from './components/ForgotPassword/VerificationCode'
-import Modal from './components/ForgotPassword/Modal'
-import ForgotPasswordForm from './components/ForgotPassword/ForgotPasswordForm'
+import VerificationCode from './components/password/VerificationCode'
+import Modal from './components/password/Modal'
+import ForgotPasswordForm from './components/password/ForgotPasswordForm'
+import Register from './pages/SignUp'
 
-const ToggleContext = React.createContext()
+const UserContext = React.createContext()
 
 function App() {
-    function togglePassword(togglerID, inputID) {
-        const passwordToggler = document.querySelector(`#${togglerID}`)
-        const passwordInput = document.querySelector(`#${inputID}`)
-
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password"
-        passwordInput.setAttribute("type", type)
-
-        passwordToggler.classList.toggle("turn-blue")
-    }
+    const [user, setUser] = React.useState({ 
+        username: "", 
+        email: '',
+        password: "",
+        phone: '',
+        phoneRecieved: false,
+        verifyCode: '', 
+        verified: false,
+        newPassword: '', 
+        confirmPassword: ''
+    })
 
     return (
-        <ToggleContext.Provider value={togglePassword}>
+        <UserContext.Provider value={{user, setUser}}>
             <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                <Route path='login' element={<Login />} >
-                    <Route path='forgot-password' element={<Modal />} >
-                        <Route index element={<ForgotPasswordForm />} />
-                        <Route path='verify-code' element={<VerificationCode />} />
-                    </Route> 
-                </Route>
+                    <Route path='login' element={<Login />} >
+                        <Route path='forgot-password' element={<Modal />} >
+                            <Route index element={<ForgotPasswordForm />} />
+                            <Route path='verify-code' element={<VerificationCode />} />
+                        </Route> 
+                    </Route>
+                    <Route path='register' element={<Register />} />
                 <Route path="*" element={<NotFound />} />
                 </Route>
             </Routes>
             </BrowserRouter>
-        </ToggleContext.Provider>
+        </UserContext.Provider>
     )
 }
 
-export { ToggleContext }
+export { FunctionsContext, UserContext }
 
 ReactDOM
     .createRoot(document.getElementById('root'))

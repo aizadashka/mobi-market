@@ -3,6 +3,7 @@ import Modal from 'react-modal'
 import ForgotPasswordForm from "./ForgotPasswordForm"
 import VerificationCode from "./VerificationCode"
 import ResetPassword from "./ResetPassword"
+import { UserContext } from "../..index"
 
 const customStyles = {
     content: {
@@ -22,8 +23,9 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-export default function ModalComponent(props) {
-    const { modalIsOpen, setIsOpen, user, setUser, handleChange, handleSubmit, togglePassword } = props
+export default function ModalComponent({ modalIsOpen, setIsOpen }) {
+
+    const { user } = React.useContext(UserContext)
 
     function closeModal() {
         setIsOpen(false)
@@ -35,23 +37,10 @@ export default function ModalComponent(props) {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 style={customStyles}
-                center
             >
-                {!user.phoneRecieved && <ForgotPasswordForm 
-                    user={user}
-                    setUser={setUser}
-                    handleChange={handleChange}
-                    handleSubmit={handleSubmit}/>}
-                {user.phoneRecieved && !user.verified && <VerificationCode 
-                    user={user}
-                    setUser={setUser}
-                    handleChange={handleChange}/>}
-                {user.verified && <ResetPassword
-                    user={user}
-                    setUser={setUser}
-                    handleChange={handleChange}
-                    togglePassword={togglePassword}
-                    closeModal={closeModal} />}
+                {!user.phoneRecieved && <ForgotPasswordForm />}
+                {user.phoneRecieved && !user.verified && <VerificationCode />}
+                {user.verified && <ResetPassword closeModal={closeModal} />}
             </Modal>
         </div>
     )

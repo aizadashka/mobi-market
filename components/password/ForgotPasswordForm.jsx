@@ -1,7 +1,12 @@
 import React from "react"
 import { FaSquarePhone } from "react-icons/fa6"
+import { handleChange } from '.../utils'
+import { UserContext } from "../..index"
 
-export default function ForgotPasswordForm({user, setUser, handleChange}) {
+
+export default function ForgotPasswordForm() {
+    const { user, setUser } = React.useContext(UserContext)
+
     const correctPhoneNumberLength = user.phone.length === 10
 
     return (

@@ -1,9 +1,12 @@
 import React from "react"
 import { FaUser  } from "react-icons/fa6"
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
+import { handleChange } from '.../utils'
+import { UserContext } from "../..index"
 
-export default function VerificationCode({user, setUser, handleChange}) {
-    const [seconds, setSeconds] = React.useState(60);
+export default function VerificationCode() {
+    const [seconds, setSeconds] = React.useState(60)
+    const { user, setUser } = React.useContext(UserContext)
 
     React.useEffect(() => {
         const timer = setInterval(() => {
