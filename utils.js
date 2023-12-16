@@ -8,14 +8,22 @@ function togglePassword(togglerID, inputID) {
     passwordToggler.classList.toggle("turn-blue")
 }
 
-function handleChange(e) {
-    const { name, value }= e.target
-    setUser(prev => {
-        return {
-            ...prev,
-            [name]: value
-        }
-    })
+function isValidEmail(email) {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 }
 
-export {togglePassword, handleChange}
+const toastStyle = {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    closeButton: false,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored"
+}
+
+const baseURL = 'https://neobook.online/mobi-market'
+
+export { togglePassword, isValidEmail, toastStyle, baseURL }

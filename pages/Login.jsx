@@ -5,35 +5,28 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom'
 import { IoEyeSharp } from "react-icons/io5"
 import Modal from '../components/password/Modal'
-import { togglePassword, handleChange } from '../utils'
+import { togglePassword, toastStyle, baseURL } from '../utils'
+import { UserContext } from '..'
 
 export default function Login() {    
     const [err, setErr] = React.useState('')
     const [modalIsOpen, setIsOpen] = React.useState(false)
+    const { user, handleChange } = React.useContext(UserContext)
 
-    const errorToast = toast.error('Неверный логин или пароль', {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        closeButton: false,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-        containerId: 'login-container'
-    })
+    const userToLogin = {
+        username: user.username, 
+        password: user.password
+    }
 
     function login(e) {
         e.preventDefault()
-        const src = 'neobook.online/mobi-market/users/login'
 
         axios
-            .post(src, {...user.username, ...user.password})
-            .then(res => res.json())
+            .post(baseURL + '/users/login/', userToLogin)
             .then(data => console.log(data))
             .catch(error => {
                 setErr(error)
-                errorToast()
+                toast.error('Неверный логин или пароль', toastStyle)
             })
     }
 
@@ -41,29 +34,29 @@ export default function Login() {
         setIsOpen(true)
     }
 
-    return <div className='login-container' id='login-container'>
-        <ToastContainer />
+    return <div className='container'>
+        <ToastContainer limit={1}/>
         <Modal modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />
         
         <form className='login'>
-            <div className={`input-wrapper ${err && 'turn-red'}`}>
+            <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
                 {user.username && <label htmlFor='username'>Имя пользователя</label>}
                 <input 
                     required 
                     name='username'
-                    className={`input ${err && 'turn-red'}`}
+                    className={`input ${err ? 'turn-red' : ''}`}
                     onChange={handleChange}             
                     placeholder='Имя пользователя'
                     type='text' />
             </div>
-            <div className={`input-wrapper ${err && 'turn-red'}`}>
+            <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
                 {user.password && <label htmlFor='password'>Пароль</label>}
                 <div className='input-with-eye'>
                     <input 
                         required
                         id='password'
                         name='password'
-                        className={`input ${err && 'turn-red'}`} 
+                        className={`input ${err ? 'turn-red' : ''}`} 
                         onChange={handleChange}
                         placeholder='Пароль'
                         type='password'
@@ -78,7 +71,7 @@ export default function Login() {
             </div>
             <Link className='link' to='forgot-password' onClick={openNewModal}>Забыли пароль</Link>
             <button 
-                id='login-button'
+//                id='login-button'
                 className={`button ${(user.password && user.username) && 'active-btn'}`}
                 onClick={login}
                 disabled={user.password && user.username ? false : true}>

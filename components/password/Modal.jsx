@@ -2,8 +2,8 @@ import React from "react"
 import Modal from 'react-modal'
 import ForgotPasswordForm from "./ForgotPasswordForm"
 import VerificationCode from "./VerificationCode"
-import ResetPassword from "./ResetPassword"
-import { UserContext } from "../..index"
+import SetPassword from "./ResetPassword"
+import { UserContext } from "../.."
 
 const customStyles = {
     content: {
@@ -40,7 +40,7 @@ export default function ModalComponent({ modalIsOpen, setIsOpen }) {
             >
                 {!user.phoneRecieved && <ForgotPasswordForm />}
                 {user.phoneRecieved && !user.verified && <VerificationCode />}
-                {user.verified && <ResetPassword closeModal={closeModal} />}
+                {user.verified && <SetPassword closeModal={closeModal} />}
             </Modal>
         </div>
     )

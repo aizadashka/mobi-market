@@ -16,7 +16,7 @@ main {
 }
 
 .auth-page-container {
-    background-image: url('.//assets/background.png');
+    background-image: url('./assets/background.png');
     background-size: cover;
     background-repeat: no-repeat;
     width: 50%;
@@ -31,7 +31,7 @@ main {
 
 /* LOGIN */
 
-.login-container {
+.container {
     display: flex;
     gap: 5rem;
     flex-direction: column;
