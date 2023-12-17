@@ -4,11 +4,9 @@ import { BrowserRouter, Routes, Route} from "react-router-dom"
 import Layout from './components/Layout'
 import Login from './pages/Login'
 import NotFound from'./pages/NotFount'
-import VerificationCode from './components/password/VerificationCode'
-import Modal from './components/password/Modal'
-import ForgotPasswordForm from './components/password/ForgotPasswordForm'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import AuthRequired from './components/AuthRequired'
 
 const UserContext = React.createContext()
 
@@ -39,18 +37,16 @@ function App() {
     return (
         <UserContext.Provider value={{user, setUser, handleChange}}>
             <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Login />} />
-                    <Route path='forgot-password' element={<Modal />} >
-                            <Route index element={<ForgotPasswordForm />} />
-                            <Route path='verify-code' element={<VerificationCode />} />
-                        </Route> 
-                    <Route path='register' element={<Register />} />
-                    <Route path='my-profile' element={<Profile />} />
-                <Route path="*" element={<NotFound />} />
-                </Route>
-            </Routes>
+                <Routes>
+                    <Route path="/*" element={<Layout />}>
+                        <Route index element={<Login />} />
+                        <Route path='register' element={<Register />} />
+                        <Route path="*" element={<NotFound />} />
+                    </Route>
+                    <Route element={<AuthRequired /> }>
+                        <Route path='/profile' element={<Profile />} />
+                    </Route>
+                </Routes>
             </BrowserRouter>
         </UserContext.Provider>
     )

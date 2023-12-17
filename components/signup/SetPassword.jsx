@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { FaLock } from "react-icons/fa6"
 import { IoEyeSharp } from "react-icons/io5"
 import { ToastContainer, toast } from 'react-toastify'
@@ -11,6 +11,7 @@ import axios from "axios"
 export default function SetPassword() {
     const { user, setUser, handleChange } = React.useContext(UserContext)
     const [err, setErr] = React.useState(false)
+    const navigate = useNavigate()
 
     const passwordsLengthEqual = user.password.length === user.confirm_password.length
 
@@ -28,16 +29,19 @@ export default function SetPassword() {
         if (user.password === user.confirm_password && user.password.length > 7) {
             axios
                 .post(baseURL + '/users/register/', newUser)
-                .then(data => console.log(data))
+                .then(data => {
+                    setUser(prev => ({
+                        ...prev,
+                        ...data.message,
+                        password: '',
+                        confirm_password: ''
+                    }))
+                    navigate('/')
+                })
                 .catch(error => {
                     setErr(error)
                     toast.error('Что-то пошло не так как надо', toastStyle)
                 })
-            setUser(prev => ({
-                ...prev,
-                password: '',
-                confirm_password: ''
-            }))
         } else {
             setErr(true)
         }
@@ -91,13 +95,11 @@ export default function SetPassword() {
                     </div>
                 </div>
                 {err && <p style={{color: '#F34545', marginTop: '0.5rem'}}>Пароли не совпадают</p>}
-                <Link to='/'>
-                    <button 
-                        className={`button ${passwordsLengthEqual && 'active-btn'}`} 
-                        disabled={!passwordsLengthEqual} 
-                        onClick={comparePassword} 
-                    >Готово</button>
-                </Link>
+                <button 
+                    className={`button ${passwordsLengthEqual && 'active-btn'}`} 
+                    disabled={!passwordsLengthEqual} 
+                    onClick={comparePassword} 
+                >Готово</button>
             </form>
         </div>
     )

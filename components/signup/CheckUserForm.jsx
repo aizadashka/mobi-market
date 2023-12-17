@@ -26,8 +26,6 @@ export default function CheckUserForm() {
         axios
             .post(baseURL + '/users/check-user/', userToCheck)
             .then(res => {
-                console.log(res)
-
                 setUser(prev => ({
                     ...prev,
                     userChecked: true
@@ -65,7 +63,6 @@ export default function CheckUserForm() {
                         type='text' />
                 </div>
                 <button 
-//                    id='login-button'
                     className={`button ${(user.email && user.username) && 'active-btn'}`}
                     onClick={checkSpelling}
                     disabled={user.email && user.username ? false : true}>
