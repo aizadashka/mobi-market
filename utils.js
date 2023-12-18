@@ -24,6 +24,4 @@ const toastStyle = {
     theme: "colored"
 }
 
-const baseURL = 'https://neobook.online/mobi-market'
-
 export { togglePassword, isValidEmail, toastStyle, baseURL }

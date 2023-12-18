@@ -14,6 +14,7 @@ function App() {
     const [user, setUser] = React.useState({ 
         username: "", 
         email: '',
+        photo: '',
         password: '',
         confirm_password: '',
         phone: '',

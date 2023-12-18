@@ -28,6 +28,7 @@ export default function Login() {
                     ...res.data,
                     password: ''
                 }))
+
                 navigate('/profile')
             })
             .catch(error => {

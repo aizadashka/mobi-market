@@ -1,11 +1,14 @@
 import React from "react"
-import axios from "axios"
+import axios from '../api/axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { UserContext } from "../.."
 import { isValidEmail, toastStyle, baseURL } from "../../utils"
 
 export default function CheckUserForm() {
+    const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
+    const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+
     const { user, setUser, handleChange } = React.useContext(UserContext)
     const [err, setErr] = React.useState('')
 
