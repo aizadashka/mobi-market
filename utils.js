@@ -24,4 +24,4 @@ const toastStyle = {
     theme: "colored"
 }
 
-export { togglePassword, isValidEmail, toastStyle, baseURL }
+export { togglePassword, isValidEmail, toastStyle }

@@ -1,10 +1,10 @@
 import React from 'react'
-import axios from 'axios'
+import axios from '../api/axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoEyeSharp } from "react-icons/io5"
-import { togglePassword, toastStyle, baseURL } from '../utils'
+import { togglePassword, toastStyle } from '../utils'
 import { UserContext } from '..'
 
 export default function Login() {    
@@ -21,7 +21,7 @@ export default function Login() {
         e.preventDefault()
 
         axios
-            .post(baseURL + '/users/login/', userToLogin)
+            .post('/users/login/', userToLogin)
             .then(res => {
                 setUser(prev => ({
                     ...prev,
@@ -44,7 +44,7 @@ export default function Login() {
     return <div className='container'>
         <ToastContainer limit={1}/>
         
-        <form className='login'>
+        <form className='login' onSubmit={login}>
             <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
                 {user.username && <label htmlFor='username'>Имя пользователя</label>}
                 <input 
@@ -78,7 +78,6 @@ export default function Login() {
             <Link className='link' to='/' onClick={openNewModal}>Забыли пароль</Link>
             <button 
                 className={`button ${(user.password && user.username) && 'active-btn'}`}
-                onClick={login}
                 disabled={user.password && user.username ? false : true}>
                     Войти
             </button>

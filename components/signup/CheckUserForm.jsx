@@ -1,16 +1,15 @@
 import React from "react"
-import axios from '../api/axios'
+import axios from "../../api/axios"
+import { useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { UserContext } from "../.."
-import { isValidEmail, toastStyle, baseURL } from "../../utils"
+import { isValidEmail, toastStyle } from "../../utils"
 
 export default function CheckUserForm() {
-    const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
-    const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-
-    const { user, setUser, handleChange } = React.useContext(UserContext)
+    const { user, handleChange } = React.useContext(UserContext)
     const [err, setErr] = React.useState('')
+    const navigate = useNavigate()
 
     const userToCheck = {
         username: user.username,
@@ -27,16 +26,18 @@ export default function CheckUserForm() {
 
     function checkUser() {
         axios
-            .post(baseURL + '/users/check-user/', userToCheck)
+            .post('/users/check-user/', userToCheck)
             .then(res => {
-                setUser(prev => ({
-                    ...prev,
-                    userChecked: true
-                }))
+                if (res.data.username || res.data.email) {
+                    toast.error('Данный пользователь уже зарегистрирован', toastStyle)
+                } else {
+                    navigate('set-password')
+                }
+
             })
             .catch(error => {
                 setErr(error)
-                toast.error('Данный пользователь уже зарегистрирован', toastStyle)
+                toast.error('Что-то пошло не так', toastStyle)
             })
 
     }
@@ -44,12 +45,13 @@ export default function CheckUserForm() {
     return (
         <div>
             <ToastContainer limit={1}/>
-            <form className='login'>
+            <form className='login' onSubmit={checkSpelling}>
                 <div className={`input-wrapper ${err && 'turn-red'}`}>
-                    {user.username && <label htmlFor='user-name'>Имя пользователя</label>}
+                    {user.username && <label htmlFor='username'>Имя пользователя</label>}
                     <input 
                         required 
                         name='username'
+                        value={user.username}
                         className={`input ${err && 'turn-red'}`}
                         onChange={handleChange}             
                         placeholder='Имя пользователя'
@@ -60,6 +62,7 @@ export default function CheckUserForm() {
                     <input 
                         required 
                         name='email'
+                        value={user.email}
                         className={`input ${err && 'turn-red'}`}
                         onChange={handleChange}             
                         placeholder='Почта'
@@ -67,7 +70,6 @@ export default function CheckUserForm() {
                 </div>
                 <button 
                     className={`button ${(user.email && user.username) && 'active-btn'}`}
-                    onClick={checkSpelling}
                     disabled={user.email && user.username ? false : true}>
                         Далее
                 </button>
