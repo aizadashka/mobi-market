@@ -1,11 +1,11 @@
 import React from "react"
 import { Outlet } from "react-router-dom"
-import { UserContext } from ".."
+import AuthContext from "../context/AuthContext"
 
 export default function AuthRequired() {
-    const {user} = React.useContext(UserContext) 
+    const { auth } = React.useContext(AuthContext) 
     
-    if (user.access) {
+    if (auth.access) {
         return <Outlet />
     }
 }

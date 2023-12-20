@@ -1,18 +1,25 @@
 import React from "react"
-import { UserContext } from ".."
 import { Link } from "react-router-dom"
-import NavBar from '../components/profile/NavBar'
+import NavBar from '../components/NavBar'
 import { FaUser } from "react-icons/fa6"
 import { IoArrowBack } from "react-icons/io5"
-import ConfirmPhoneForm from "../components/ConfirmPhoneForm"
 import Modal from 'react-modal'
+import AuthContext from "../context/AuthContext"
 
 export default function Profile() {
-    const { user, handleChange } = React.useContext(UserContext)
-    const [openModal, setOpenModal ] = React.useState(true)
+    const { auth, setAuth } = React.useContext(AuthContext)
 
+    function handleChange(e) {
+        const { name, value } = e.target
 
-    console.log(user) 
+        setAuth(prev => {
+            return {
+                ...prev,
+                [name]: value
+            }
+        })
+    }
+
     return (
         <div>
             <NavBar />
@@ -21,7 +28,7 @@ export default function Profile() {
                     <Link><IoArrowBack />Назад</Link>
                     <h3>Профиль</h3>
                 </div> 
-                { user.photo ? <img className='user-img' src={user.photo} alt={`${user.username}'s profile photo`} /> : <FaUser className="user-icon big"/> }
+                { auth.photo ? <img className='user-img' src={auth.photo} alt={`${auth.username}'s profile photo`} /> : <FaUser className="user-icon big"/> }
                 <label className="link center">Выберите фотографию
                     <input 
                         name="newPhoto"
@@ -38,7 +45,7 @@ export default function Profile() {
                                 className='input'
                                 onChange={handleChange}             
                                 placeholder='Имя'
-                                value={user._name ? user._name : ''}
+                                value={auth.first_name ? auth.first_name : ''}
                                 type='text' />
                         </div>
                         <div className={'profile-input-wrapper'}>
@@ -47,12 +54,12 @@ export default function Profile() {
                                 className='input'
                                 onChange={handleChange}             
                                 placeholder='Фамилия'
-                                value={user.last_name ? user.last_name : ''}
+                                value={auth.last_name ? auth.last_name : ''}
                                 type='text' />
                         </div>
                         <div className={'profile-input-wrapper'}>
                             <input 
-                                value={user.username}
+                                value={auth.username}
                                 name='username'
                                 className='input'
                                 onChange={handleChange}             
@@ -70,21 +77,21 @@ export default function Profile() {
                     </div>
                     <div className="contact-info">
                         <div className="phone-container">
-                            <Link onClick={() => setOpenModal(prev => !prev)}>Добавить номер</Link>
+                            <Link >Добавить номер</Link>
                         </div>
                         <input 
                             required 
                             name='email'
                             className='input'
                             onChange={handleChange}  
-                            value={user.email}           
+                            value={auth.email}           
                             placeholder='Почта'
                             type='text' />
                     </div>
+                    { auth.first_name && auth.last_name && auth.birth_date && auth.phone && 
+                        <button className='button active-btn'>Закончить регистрацию</button>
+                    }
                 </form>
-                <Modal >
-                    <ConfirmPhoneForm />
-                </Modal>
             </div>
         </div>
     )

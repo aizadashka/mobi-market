@@ -3,30 +3,25 @@ import axios from "../../api/axios"
 import { useNavigate } from "react-router-dom"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { UserContext } from "../.."
 import { isValidEmail, toastStyle } from "../../utils"
 
 export default function CheckUserForm() {
-    const { user, handleChange } = React.useContext(UserContext)
+    const [username, setUsername] = React.useState('')
+    const [email, setEmail] = React.useState('')
     const [err, setErr] = React.useState('')
     const navigate = useNavigate()
-
-    const userToCheck = {
-        username: user.username,
-        email: user.email
-    }
 
     function checkSpelling(e) {
         e.preventDefault()
 
-        typeof Number(user.username) !== 'number' || isValidEmail(user.email)
+        typeof Number(username) !== 'number' || isValidEmail(email)
             ? checkUser() 
             : toast.error('Неверный логин или почта', toastStyle)  
     }
 
     function checkUser() {
         axios
-            .post('/users/check-user/', userToCheck)
+            .post('/users/check-user/', { username, email})
             .then(res => {
                 if (res.data.username || res.data.email) {
                     toast.error('Данный пользователь уже зарегистрирован', toastStyle)
@@ -47,33 +42,34 @@ export default function CheckUserForm() {
             <ToastContainer limit={1}/>
             <form className='login' onSubmit={checkSpelling}>
                 <div className={`input-wrapper ${err && 'turn-red'}`}>
-                    {user.username && <label htmlFor='username'>Имя пользователя</label>}
+                    {username && <label htmlFor='username'>Имя пользователя</label>}
                     <input 
                         required 
                         name='username'
-                        value={user.username}
+                        value={username}
                         className={`input ${err && 'turn-red'}`}
-                        onChange={handleChange}             
+                        onChange={(e) => setUsername(e.target.value)}             
                         placeholder='Имя пользователя'
                         type='text' />
                 </div>
                 <div className={`input-wrapper ${err && 'turn-red'}`}>
-                    {user.email && <label htmlFor='email'>Почта</label>}
+                    {email && <label htmlFor='email'>Почта</label>}
                     <input 
                         required 
                         name='email'
-                        value={user.email}
+                        value={email}
                         className={`input ${err && 'turn-red'}`}
-                        onChange={handleChange}             
+                        onChange={(e) => setEmail(e.target.value)}             
                         placeholder='Почта'
                         type='text' />
                 </div>
                 <button 
-                    className={`button ${(user.email && user.username) && 'active-btn'}`}
-                    disabled={user.email && user.username ? false : true}>
+                    className={`button ${(email && username) && 'active-btn'}`}
+                    disabled={email && username ? false : true}>
                         Далее
                 </button>
             </form>
+            {success && <SetPassword user={user} email={email} />}
         </div>
     )
 }

@@ -6,35 +6,34 @@ import { IoEyeSharp } from "react-icons/io5"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { toastStyle, togglePassword } from "../../utils"
-import { UserContext } from "../.."
 
 
-export default function SetPassword() {
-    const { user, setUser, handleChange } = React.useContext(UserContext)
+export default function SetPassword({username, email}) {
+    const [password, setPassword] = React.useState('')
+    const [confirmPassword, setConfirmPassword] = React.useState('')
     const [err, setErr] = React.useState(false)
     const navigate = useNavigate()
 
-    const passwordsLengthEqual = user.password.length === user.confirm_password.length
-
-    const newUser = {
-        username: user.username,
-        email: user.email,
-        password: user.password,
-        confirm_password: user.confirm_password
-    }
+    const passwordsLengthEqual = password.length === confirmPassword.length
 
     function comparePassword(e) {
         e.preventDefault()
         console.log(user)
 
-        if (user.password === user.confirm_password && user.password.length > 7) {
+        if (password === confirmPassword && password.length > 7) {
             axios
-                .post('/users/register/', JSON.stringify(newUser), {
+                .post('/users/register/', JSON.stringify({
+                    username,
+                    email,
+                    password,
+                    confirmPassword,
+                }), {
                     headers: {'Content-Type': 'application/json'},
                     withCredentials: true
                 })
                 .then(() => {
-                    setUser({})
+                    setPassword('')
+                    setConfPm_password('')
                     navigate('/')
                 })
                 .catch(error => {
@@ -54,14 +53,14 @@ export default function SetPassword() {
                 <h3>Придумайте пароль</h3>
                 <p className="explaining-message">Минимальная длина — 8 символов. Для надежности пароль должен содержать буквы и цифры.</p>
                 <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
-                    {user.password && <label className='left' htmlFor='password'>Пароль</label>}
+                    {password && <label className='left' htmlFor='password'>Пароль</label>}
                     <div className='input-with-eye'>
                         <input 
                             required
                             id='password'
                             name='password'
                             className={`input ${err ? 'turn-red' : ''}`} 
-                            onChange={handleChange}
+                            onChange={(e) => setPassword(e.target.value)}
                             placeholder='Пароль'
                             type='password'
                             autoComplete='corrent-password'/>
@@ -74,14 +73,14 @@ export default function SetPassword() {
                     </div>
                 </div>
                 <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
-                    {user.confirm_password && <label className='left' htmlFor='confirm_password'>Повторите пароль</label>}
+                    {confirmPassword && <label className='left' htmlFor='confirm_password'>Повторите пароль</label>}
                     <div className='input-with-eye'>
                         <input 
                             required
                             id='confirm_password'
                             name='confirm_password'
                             className={`input ${err ? 'turn-red' : ''}`} 
-                            onChange={handleChange}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             placeholder='Повторите пароль'
                             type='password'
                             autoComplete='corrent-password'/>

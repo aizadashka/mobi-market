@@ -5,83 +5,84 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { IoEyeSharp } from "react-icons/io5"
 import { togglePassword, toastStyle } from '../utils'
-import { UserContext } from '..'
+import AuthContext from '../context/AuthContext'
 
-export default function Login() {    
+export default function Login() {
+    const { setAuth } = React.useContext(AuthContext)
     const [err, setErr] = React.useState('')
-    const { user, setUser, handleChange } = React.useContext(UserContext)
+    const [ username, setUsername ] = React.useState('')
+    const [ password, setPassword ] = React.useState('')
     const navigate = useNavigate()
-
-    const userToLogin = {
-        username: user.username, 
-        password: user.password
-    }
 
     function login(e) {
         e.preventDefault()
 
         axios
-            .post('/users/login/', userToLogin)
+            .post(
+                '/users/login/', 
+                JSON.stringify({username, password}),
+                {
+                    headers: {'Content-Type': 'application/json'},
+                    withCredentials: false
+                }
+            )
             .then(res => {
-                setUser(prev => ({
-                    ...prev,
-                    ...res.data,
-                    password: ''
-                }))
-
+                console.log(res)
+                setAuth(res.data)
+                setUsername('')
+                setPassword('')
                 navigate('/profile')
             })
             .catch(error => {
                 setErr(error)
+                console.log(error)
                 toast.error('Неверный логин или пароль', toastStyle)
             })
     }
 
-    function openNewModal() {
-        setIsOpen(true)
-    }
-
-    return <div className='container'>
-        <ToastContainer limit={1}/>
-        
-        <form className='login' onSubmit={login}>
-            <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
-                {user.username && <label htmlFor='username'>Имя пользователя</label>}
-                <input 
-                    required 
-                    name='username'
-                    className={`input ${err ? 'turn-red' : ''}`}
-                    onChange={handleChange}             
-                    placeholder='Имя пользователя'
-                    type='text' />
-            </div>
-            <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
-                {user.password && <label htmlFor='password'>Пароль</label>}
-                <div className='input-with-eye'>
+    return (
+        <div className='container'>
+            <ToastContainer limit={1}/>
+            
+            <form className='login' onSubmit={login}>
+                <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
+                    {username && <label htmlFor='username'>Имя пользователя</label>}
                     <input 
-                        required
-                        id='password'
-                        name='password'
-                        className={`input ${err ? 'turn-red' : ''}`} 
-                        onChange={handleChange}
-                        placeholder='Пароль'
-                        type='password'
-                        autoComplete='corrent-password'/>
-                    <IoEyeSharp 
-                        className='icon' 
-                        onClick={() => {
-                            togglePassword('passwordToggler', 'password')
-                        }} 
-                        id='passwordToggler'/>
+                        required 
+                        name='username'
+                        className={`input ${err ? 'turn-red' : ''}`}
+                        onChange={(e) => setUsername(e.target.value)}             
+                        placeholder='Имя пользователя'
+                        type='text' />
                 </div>
-            </div>
-            <Link className='link' to='/' onClick={openNewModal}>Забыли пароль</Link>
-            <button 
-                className={`button ${(user.password && user.username) && 'active-btn'}`}
-                disabled={user.password && user.username ? false : true}>
-                    Войти
-            </button>
-        </form>
-        <Link className='link center' to='/register' >Зарегистрироваться</Link>
-    </div>
+                <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
+                    {password && <label htmlFor='password'>Пароль</label>}
+                    <div className='input-with-eye'>
+                        <input 
+                            required
+                            id='password'
+                            name='password'
+                            className={`input ${err ? 'turn-red' : ''}`} 
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder='Пароль'
+                            type='password'
+                            autoComplete='corrent-password'/>
+                        <IoEyeSharp 
+                            className='icon' 
+                            onClick={() => {
+                                togglePassword('passwordToggler', 'password')
+                            }} 
+                            id='passwordToggler'/>
+                    </div>
+                </div>
+                <Link className='link' to='/' >Забыли пароль</Link>
+                <button 
+                    className={`button ${(password && username) && 'active-btn'}`}
+                    disabled={password && username ? false : true}>
+                        Войти
+                </button>
+            </form>
+            <Link className='link center' to='/register' >Зарегистрироваться</Link>
+        </div>
+    )
 }

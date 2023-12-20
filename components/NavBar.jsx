@@ -1,18 +1,18 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
-import { UserContext } from "../../index"
 import { FaUser, FaHeart, FaStore, FaDoorOpen } from "react-icons/fa6"
+import AuthContext from "../context/AuthContext"
 
 export default function Profile() {
-    const { user } = React.useContext(UserContext)
+    const {username, email} = React.useContext(AuthContext)
     
     return (
         <nav>
             <NavLink className='nav-item' >
                 <FaUser className="nav-icon medium" />
                 <div>
-                    <p>{user.username}</p>
-                    <p>{user.email}</p>
+                    <p>{username}</p>
+                    <p>{email}</p>
                 </div>
             </NavLink>
             <div className="nav-group">
