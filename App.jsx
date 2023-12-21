@@ -1,31 +1,45 @@
 import React from "react"
-import { BrowserRouter, Routes, Route} from "react-router-dom"
-import Layout from './components/Layout'
+import { Routes, Route} from "react-router-dom"
+import LoginLayout from './components/LoginLayout'
 import Login from './pages/Login'
 import NotFound from'./pages/NotFount'
 import RegisterLayout from './components/RegisterLayout'
 import Profile from './pages/Profile'
 import SetPassword from './components/signup/SetPassword'
 import CheckUserForm from './components/signup/CheckUserForm'
-import AuthRequired from "./components/AuthRequired"
+import RequireAuth from "./components/RequireAuth"
+import MainPage from "./pages/MainPage"
+import ProfileLayout from "./components/ProfileLayout"
+import LikedProducts from "./pages/LikedProducts"
+import MyProducts from "./pages/MyProducts"
 
 export default function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={<Layout />}>
-                    <Route index element={<Login />} />
-                    <Route element={<RegisterLayout />} >
-                        <Route path='register' element={<CheckUserForm />} >
-                            <Route path='set-password' element={<SetPassword />} />
-                        </Route>
+        <Routes>
+
+            {/* public pages */}
+            <Route element={<LoginLayout />}>
+                <Route path="login" element={<Login />} />
+                <Route element={<RegisterLayout />} >
+                    <Route path='register' element={<CheckUserForm />} >
+                        <Route path='set-password' element={<SetPassword />} />
                     </Route>
-                    <Route path="*" element={<NotFound />} />
                 </Route>
-                <Route path='/profile' element={<AuthRequired /> }>
-                    <Route index element={<Profile />} />
+            </Route>
+
+            {/* private pages */}
+            <Route element={<RequireAuth />}>
+                <Route index element={<MainPage />} />
+                <Route element={<ProfileLayout />} >
+                    <Route path='profile' element={<Profile />} />
+                    <Route path='liked-products' element={<LikedProducts />} />
+                    <Route path='my-products' element={<MyProducts />} />
                 </Route>
-            </Routes>
-        </BrowserRouter>
+            </Route>
+
+            {/* Missing pages */}
+            <Route path="*" element={<NotFound />} />
+
+        </Routes>
     )
 }

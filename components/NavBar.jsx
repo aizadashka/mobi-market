@@ -1,14 +1,15 @@
 import React from "react"
 import { NavLink } from "react-router-dom"
-import { FaUser, FaHeart, FaStore, FaDoorOpen } from "react-icons/fa6"
-import AuthContext from "../context/AuthContext"
+import { FaUser, FaHeart, FaStore, FaDoorOpen, FaAngleRight } from "react-icons/fa6"
+import useAuth from "../hooks/useAuth"
 
-export default function Profile() {
-    const {username, email} = React.useContext(AuthContext)
+export default function NavBar() {
+    const { auth } = useAuth()
+    const { username, email, first_name } = auth
     
     return (
         <nav>
-            <NavLink className='nav-item' >
+            <NavLink to='/profile' className='nav-item' >
                 <FaUser className="nav-icon medium" />
                 <div>
                     <p>{username}</p>
@@ -16,19 +17,44 @@ export default function Profile() {
                 </div>
             </NavLink>
             <div className="nav-group">
-                <NavLink className='nav-item' >
-                    <FaHeart className="icon" />
-                    <p>Понравившиеся</p>
-                </NavLink>
-                <NavLink className='nav-item' >
-                    <FaStore className="icon" />
-                    <p>Мои товары</p>
-                </NavLink>
-                <NavLink className='nav-item' >
-                    <FaDoorOpen className="icon" />
-                    <p>Войти</p>
-                </NavLink>
+                { first_name 
+                    ? <><NavLink to='/liked-products' className='nav-item' >
+                        <div>
+                            <FaHeart className="icon" />
+                            <p>Понравившиеся</p>
+                        </div>
+                        <FaAngleRight />
+                    </NavLink>
+                    <NavLink to='/my-products' className='nav-item' >
+                        <div>
+                            <FaStore className="icon" />
+                            <p>Мои товары</p>
+                        </div>
+                        <FaAngleRight />
+                    </NavLink></>
+                    : <><div className='nav-item disabled' >
+                        <div>
+                            <FaHeart className="icon" />
+                            <p>Понравившиеся</p>
+                        </div>
+                        <FaAngleRight />
+                    </div>
+                    <div className='nav-item disabled' >
+                        <div>
+                            <FaStore className="icon" />
+                            <p>Мои товары</p>
+                        </div>
+                        <FaAngleRight />
+                    </div></>
+                }
             </div>
+            <NavLink className='nav-item' >
+                <div>
+                    <FaDoorOpen className="icon" />
+                    <p>Выйти</p>
+                </div>
+                <FaAngleRight />
+            </NavLink>
         </nav>
     )
 }

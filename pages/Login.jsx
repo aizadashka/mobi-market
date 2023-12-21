@@ -2,36 +2,37 @@ import React from 'react'
 import axios from '../api/axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { IoEyeSharp } from "react-icons/io5"
 import { togglePassword, toastStyle } from '../utils'
-import AuthContext from '../context/AuthContext'
+import useAuth from '../hooks/useAuth'
 
 export default function Login() {
-    const { setAuth } = React.useContext(AuthContext)
+    const { auth, setAuth } = useAuth()
+
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from  = location.state?.from?.pathname || '/'
+
     const [err, setErr] = React.useState('')
     const [ username, setUsername ] = React.useState('')
     const [ password, setPassword ] = React.useState('')
-    const navigate = useNavigate()
 
     function login(e) {
         e.preventDefault()
 
         axios
-            .post(
-                '/users/login/', 
-                JSON.stringify({username, password}),
-                {
-                    headers: {'Content-Type': 'application/json'},
-                    withCredentials: false
-                }
-            )
+            .post('/users/login/', JSON.stringify({username, password}), {
+                headers: {'Content-Type': 'application/json'},
+                withCredentials: false
+            })
             .then(res => {
-                console.log(res)
                 setAuth(res.data)
                 setUsername('')
                 setPassword('')
-                navigate('/profile')
+                auth.first_name 
+                    ? navigate(from, {replace: true})
+                    : navigate('/profile')
             })
             .catch(error => {
                 setErr(error)
