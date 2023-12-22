@@ -24,4 +24,20 @@ const toastStyle = {
     theme: "colored"
 }
 
-export { togglePassword, isValidEmail, toastStyle }
+const modalStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    border: 'none',
+    borderRadius: '40px'
+},
+overlay: {
+    background: 'rgba(0, 0, 0, 0.5)',
+}
+}
+
+export { togglePassword, isValidEmail, toastStyle, modalStyles }

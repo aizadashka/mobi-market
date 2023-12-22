@@ -33,7 +33,7 @@ export default function SetPassword({username, email}) {
                 })
                 .then(() => {
                     setPassword('')
-                    setConfPm_password('')
+                    setConfirmPassword('')
                     navigate('/')
                 })
                 .catch(error => {
@@ -92,7 +92,7 @@ export default function SetPassword({username, email}) {
                             id='confirm_passwordToggler'/>
                     </div>
                 </div>
-                {err && <p style={{color: '#F34545', marginTop: '0.5rem'}}>Пароли не совпадают</p>}
+                {err && <p className="error">Пароли не совпадают</p>}
                 <button 
                     className={`button ${passwordsLengthEqual && 'active-btn'}`} 
                     disabled={!passwordsLengthEqual} 

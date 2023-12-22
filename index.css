@@ -140,9 +140,6 @@ label {
     margin: 1rem;
 }
 
-
-
-
 .explaining-message {
     color: #C0C0C0;
     font-size: 1rem;
@@ -193,6 +190,10 @@ input::-webkit-inner-spin-button {
 .big {
     font-size: 5rem;
     padding: 1rem;
+}
+.error {
+    color: #F34545;
+    margin-top: 0.5rem;
 }
 
 /* NAVBAR */

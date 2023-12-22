@@ -43,8 +43,7 @@ export default function Login() {
 
     return (
         <div className='container'>
-            <ToastContainer limit={1}/>
-            
+            <ToastContainer limit={1}/>    
             <form className='login' onSubmit={login}>
                 <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
                     {username && <label htmlFor='username'>Имя пользователя</label>}
@@ -52,7 +51,10 @@ export default function Login() {
                         required 
                         name='username'
                         className={`input ${err ? 'turn-red' : ''}`}
-                        onChange={(e) => setUsername(e.target.value)}             
+                        onChange={(e) => {
+                            setUsername(e.target.value)
+                            setErr()
+                        }}             
                         placeholder='Имя пользователя'
                         type='text' />
                 </div>
@@ -64,7 +66,10 @@ export default function Login() {
                             id='password'
                             name='password'
                             className={`input ${err ? 'turn-red' : ''}`} 
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => {
+                                setPassword(e.target.value)
+                                setErr()
+                            }}
                             placeholder='Пароль'
                             type='password'
                             autoComplete='corrent-password'/>

@@ -5,24 +5,30 @@ import { IoArrowBack } from "react-icons/io5"
 import Modal from 'react-modal'
 import useAuth from "../hooks/useAuth"
 import useAxiosPrivate from "../hooks/useAxiosPrivate"
-import { isValidEmail, toastStyle } from "../utils"
-import { toast } from "react-toastify"
-
+import { isValidEmail, toastStyle, modalStyles } from "../utils"
+import { ToastContainer, toast } from "react-toastify"
+import AddPhone from '../components/modal/AddPhone'
 
 export default function Profile() {
     const { auth, setAuth } = useAuth()
     const [ userDataChanged, setUserDataChanged ] = React.useState(false)
     const axios = useAxiosPrivate()
+    const [isModalOpen, setIsModalOpen] = React.useState(false)
+
+    function openModal() {
+        setIsModalOpen(true)
+    }
+    function closeModal() {
+        setIsModalOpen(false)
+    }
+    Modal.setAppElement('#root')
 
     const { username, first_name, last_name, birth_date, phone, email } = auth
 
-    React.useEffect(() => {
-        setUserDataChanged(true)
-    }, [first_name, last_name, birth_date, phone, email])
-
-
     function handleChange(e) {
         const { name, value } = e.target
+
+        setUserDataChanged(true)
 
         if (name === 'email') {
             isValidEmail(value) 
@@ -42,13 +48,13 @@ export default function Profile() {
         e.preventDefault()
 
         axios
-            .put('/users/profile/update/', JSON.stringify({
+            .put('/users/profile/update/', {
                 first_name, 
                 last_name, 
                 username, 
                 email,
                 birth_date
-            }), {
+            }, {
                 headers: {'Content-Type': 'application/json'},
                 withCredentials: false
             })
@@ -65,9 +71,10 @@ export default function Profile() {
             })
             
     }  
-
+console.log(!first_name, !last_name, !birth_date, userDataChanged)
     return (
         <div className="container">
+            <ToastContainer limit={1}/>
             <div className="auth-nav">
                 <Link to='/'><IoArrowBack />Назад</Link>
                 <h3>Профиль</h3>
@@ -91,7 +98,7 @@ export default function Profile() {
                             className='input'
                             onChange={handleChange}             
                             placeholder='Имя'
-                            value={first_name || undefined}
+                            value={first_name || ''}
                             type='text' />
                     </div>
                     <div className={'profile-input-wrapper'}>
@@ -101,7 +108,7 @@ export default function Profile() {
                             className='input'
                             onChange={handleChange}             
                             placeholder='Фамилия'
-                            value={last_name || undefined}
+                            value={last_name || ''}
                             type='text' />
                     </div>
                     <div className={'profile-input-wrapper'}>
@@ -120,14 +127,15 @@ export default function Profile() {
                             className='input'
                             onChange={handleChange}             
                             placeholder='ГГГГ-ММ-ДД'
-                            value={birth_date || undefined}
+                            value={birth_date || ''}
                             pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])"
                             type='date' />
                     </div>
                 </div>
                 <div className="contact-info">
                     <div className="phone-container">
-                        <Link>Добавить номер</Link>
+                        <Link onClick={openModal}>{phone ? 'Изменить' : 'Добавить'} номер</Link>
+                        <span>{phone ? phone : '0 000 000 000'}</span>
                     </div>
                     <input 
                         required 
@@ -138,10 +146,20 @@ export default function Profile() {
                         placeholder='Почта'
                         type='text' />
                 </div>
-                { (!first_name || !last_name || !birth_date || !phone || !photo || userDataChanged) && 
-                    <button className='button active-btn'>Закончить регистрацию</button>
+                { (!first_name || !last_name || !birth_date || userDataChanged) && 
+                    <button className='button active-btn'>
+                        {(first_name && last_name && birth_date) ? 'Сохранить' : 'Закончить регистрацию'}
+                    </button>
                 }
             </form>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                style={modalStyles}
+                center
+            >
+                <AddPhone closeModal={closeModal} />
+            </Modal>
         </div>
     )
 }

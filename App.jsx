@@ -1,15 +1,16 @@
 import React from "react"
 import { Routes, Route} from "react-router-dom"
-import LoginLayout from './components/LoginLayout'
+import { ToastContainer } from "react-toastify"
+import LoginLayout from './components/layout/LoginLayout'
 import Login from './pages/Login'
 import NotFound from'./pages/NotFount'
-import RegisterLayout from './components/RegisterLayout'
+import RegisterLayout from './components/layout/RegisterLayout'
 import Profile from './pages/Profile'
 import SetPassword from './components/signup/SetPassword'
 import CheckUserForm from './components/signup/CheckUserForm'
 import RequireAuth from "./components/RequireAuth"
 import MainPage from "./pages/MainPage"
-import ProfileLayout from "./components/ProfileLayout"
+import ProfileLayout from "./components/layout/ProfileLayout"
 import LikedProducts from "./pages/LikedProducts"
 import MyProducts from "./pages/MyProducts"
 
