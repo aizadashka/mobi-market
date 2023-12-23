@@ -1,50 +1,46 @@
 import React from "react"
-import axios from "../../api/axios"
+import useAxiosPrivate from "../../hooks/useAxiosPrivate"
+import useAuth from "../../hooks/useAuth"
 import { useNavigate } from "react-router-dom"
 import { FaLock } from "react-icons/fa6"
 import { IoEyeSharp } from "react-icons/io5"
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { toastStyle, togglePassword } from "../../utils"
+import { togglePassword } from "../../utils"
 
 
-export default function SetPassword({username, email}) {
+export default function ResetPassword({closeModal}) {
     const [password, setPassword] = React.useState('')
     const [confirmPassword, setConfirmPassword] = React.useState('')
     const [err, setErr] = React.useState(false)
     const navigate = useNavigate()
+    const axios = useAxiosPrivate()
+    const { setAuth } = useAuth()
 
-    const passwordsLengthEqual = password.length === confirmPassword.length
+    const passwordsLengthCorrect = password.length === confirmPassword.length && password.length > 7
 
     function comparePassword(e) {
         e.preventDefault()
-        console.log(user)
 
         if (password === confirmPassword && password.length > 7) {
             axios
-                .post('/users/register/', {
-                    username,
-                    email,
-                    password,
-                    confirmPassword,
-                })
+                .post('/users/change-password/', { password, confirmPassword })
                 .then(() => {
                     setPassword('')
                     setConfirmPassword('')
-                    navigate('/')
+                    setAuth({})
+                    closeModal()
+                    navigate('/login')
+                    console.log(res)
                 })
                 .catch(error => {
-                    setErr(error)
-                    toast.error('Что-то пошло не так как надо', toastStyle)
+                    setErr(error.message)
                 })
-        } else {
-            setErr(true)
-        }
+        } else  {
+            setErr('Пароли не совпадают')
+        } 
     }
 
     return (
         <div className="form" onSubmit={comparePassword} >
-            <ToastContainer limit={1}/>
             <form>
                 <FaLock className="lock-icon big" />
                 <h3>Придумайте пароль</h3>
@@ -54,7 +50,7 @@ export default function SetPassword({username, email}) {
                     <div className='input-with-eye'>
                         <input 
                             required
-                            id='password'
+                            id='resetPassword'
                             name='password'
                             className={`input ${err ? 'turn-red' : ''}`} 
                             onChange={(e) => setPassword(e.target.value)}
@@ -64,9 +60,9 @@ export default function SetPassword({username, email}) {
                         <IoEyeSharp 
                             className='icon' 
                             onClick={() => {
-                                togglePassword('passwordToggler', 'password')
+                                togglePassword('resetPasswordToggler', 'resetPassword')
                             }} 
-                            id='passwordToggler'/>
+                            id='resetPasswordToggler'/>
                     </div>
                 </div>
                 <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
@@ -74,7 +70,7 @@ export default function SetPassword({username, email}) {
                     <div className='input-with-eye'>
                         <input 
                             required
-                            id='confirm_password'
+                            id='resetConfirm_password'
                             name='confirm_password'
                             className={`input ${err ? 'turn-red' : ''}`} 
                             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -84,15 +80,15 @@ export default function SetPassword({username, email}) {
                         <IoEyeSharp 
                             className='icon' 
                             onClick={() => {
-                                togglePassword('confirm_passwordToggler', 'confirm_password')
+                                togglePassword('resetConfirm_passwordToggler', 'resetConfirm_password')
                             }}
-                            id='confirm_passwordToggler'/>
+                            id='resetConfirm_passwordToggler'/>
                     </div>
                 </div>
                 {err && <p className="error">Пароли не совпадают</p>}
                 <button 
-                    className={`button ${passwordsLengthEqual && 'active-btn'}`} 
-                    disabled={!passwordsLengthEqual} 
+                    className={`button ${passwordsLengthCorrect && 'active-btn'}`} 
+                    disabled={!passwordsLengthCorrect} 
                 >Готово</button>
             </form>
         </div>

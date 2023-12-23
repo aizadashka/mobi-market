@@ -22,9 +22,8 @@ export default function App() {
             <Route element={<LoginLayout />}>
                 <Route path="login" element={<Login />} />
                 <Route element={<RegisterLayout />} >
-                    <Route path='register' element={<CheckUserForm />} >
-                        <Route path='set-password' element={<SetPassword />} />
-                    </Route>
+                    <Route path='register' element={<CheckUserForm />} />
+                    <Route path='set-password' element={<SetPassword />} />
                 </Route>
             </Route>
 

@@ -26,7 +26,7 @@ export default function CheckUserForm() {
                 if (res.data.username || res.data.email) {
                     toast.error('Данный пользователь уже зарегистрирован', toastStyle)
                 } else {
-                    navigate('set-password')
+                    navigate('/set-password')
                 }
 
             })
@@ -69,7 +69,6 @@ export default function CheckUserForm() {
                         Далее
                 </button>
             </form>
-            {success && <SetPassword user={user} email={email} />}
         </div>
     )
 }

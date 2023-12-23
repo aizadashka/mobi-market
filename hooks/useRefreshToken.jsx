@@ -6,7 +6,7 @@ export default function useRefreshToken() {
 
     function refresh() {
         axios
-            .post('users/login/refresh/', JSON.stringify({refresh: auth.refresh}), {
+            .post('users/login/refresh/', {refresh: auth.refresh}, {
                 withCredentials: false
             })
             .then(res => {

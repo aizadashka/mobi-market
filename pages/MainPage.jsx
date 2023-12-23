@@ -1,6 +1,7 @@
 import React from "react"
 import logoSmall from '../assets/logoSmall.png'
 import useAuth from "../hooks/useAuth"
+import useAxiosPrivate from "../hooks/useAxiosPrivate"
 import { FaUser } from "react-icons/fa6"
 import { useNavigate } from "react-router-dom"
 
@@ -8,6 +9,26 @@ export default function MainPage() {
     const { auth } = useAuth()
     const { username, first_name, email, photo } = auth
     const navigate = useNavigate()
+    const axios = useAxiosPrivate()
+
+    const [products, setProducts] = React.useState([])
+
+    React.useEffect(() => {
+        axios
+        .get('/products/', {page: 1, limit: 32}, {
+            headers: { 'Content-Type': 'application/json'},
+            withCredentials: false  
+        })
+        .then(res => {
+            setProducts(res.data)
+            console.log(res)
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }, [])
+
+    
 
     return (
         <>
@@ -28,7 +49,7 @@ export default function MainPage() {
                 </div>
             </header>
             <section>
-                <div>products here</div>
+                <div></div>
             </section>
         </>
     )

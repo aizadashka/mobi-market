@@ -4,8 +4,14 @@ import { FaUser, FaHeart, FaStore, FaDoorOpen, FaAngleRight } from "react-icons/
 import useAuth from "../hooks/useAuth"
 
 export default function NavBar() {
-    const { auth } = useAuth()
+    const { auth, setAuth } = useAuth()
     const { username, email, first_name } = auth
+
+    function logout(e) {
+        e.preventDefault()
+
+        setTimeout(() => setAuth({}), 500)
+    }
     
     return (
         <nav>
@@ -48,7 +54,7 @@ export default function NavBar() {
                     </div></>
                 }
             </div>
-            <NavLink className='nav-item' >
+            <NavLink onClick={logout} className='nav-item' >
                 <div>
                     <FaDoorOpen className="icon" />
                     <p>Выйти</p>

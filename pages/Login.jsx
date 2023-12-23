@@ -4,8 +4,11 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { IoEyeSharp } from "react-icons/io5"
-import { togglePassword, toastStyle } from '../utils'
+import { togglePassword, toastStyle, modalStyles } from '../utils'
 import useAuth from '../hooks/useAuth'
+import Modal from 'react-modal'
+import ForgotPassword from '../components/modal/ForgotPassword'
+import ResetPassword from '../components/modal/ResetPassword'
 
 export default function Login() {
     const { auth, setAuth } = useAuth()
@@ -18,19 +21,26 @@ export default function Login() {
     const [ username, setUsername ] = React.useState('')
     const [ password, setPassword ] = React.useState('')
 
+    const [ isModalOpen, setIsModalOpen ] = React.useState(false)
+    const [ phoneVerified, setPhoneVerified ] = React.useState(false)
+    function openModal() {
+        setIsModalOpen(true)
+    }
+    function closeModal() {
+        setIsModalOpen(false)
+    }
+    Modal.setAppElement('#root')
+
     function login(e) {
         e.preventDefault()
 
         axios
-            .post('/users/login/', JSON.stringify({username, password}), {
-                headers: {'Content-Type': 'application/json'},
-                withCredentials: false
-            })
+            .post('/users/login/', {username, password})
             .then(res => {
                 setAuth(res.data)
                 setUsername('')
                 setPassword('')
-                auth.first_name 
+                res.data.first_name 
                     ? navigate(from, {replace: true})
                     : navigate('/profile')
             })
@@ -81,7 +91,7 @@ export default function Login() {
                             id='passwordToggler'/>
                     </div>
                 </div>
-                <Link className='link' to='/' >Забыли пароль</Link>
+                <Link className='link' onClick={openModal} >Забыли пароль</Link>
                 <button 
                     className={`button ${(password && username) && 'active-btn'}`}
                     disabled={password && username ? false : true}>
@@ -89,6 +99,15 @@ export default function Login() {
                 </button>
             </form>
             <Link className='link center' to='/register' >Зарегистрироваться</Link>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                style={modalStyles}
+                center
+            >
+                {!phoneVerified && <ForgotPassword setPhoneVerified={setPhoneVerified}/>}
+                {phoneVerified && <ResetPassword closeModal={closeModal} />}
+            </Modal>
         </div>
     )
 }

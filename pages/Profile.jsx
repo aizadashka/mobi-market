@@ -43,7 +43,7 @@ export default function Profile() {
             }
         })
     }
-    console.log(auth)
+
     function submitChanges(e) {
         e.preventDefault()
 
@@ -54,9 +54,6 @@ export default function Profile() {
                 username, 
                 email,
                 birth_date
-            }, {
-                headers: {'Content-Type': 'application/json'},
-                withCredentials: false
             })
             .then(res => {
                 setAuth(prev => ({
@@ -71,7 +68,7 @@ export default function Profile() {
             })
             
     }  
-console.log(!first_name, !last_name, !birth_date, userDataChanged)
+
     return (
         <div className="container">
             <ToastContainer limit={1}/>
