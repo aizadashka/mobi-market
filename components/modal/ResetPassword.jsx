@@ -9,23 +9,23 @@ import { togglePassword } from "../../utils"
 
 export default function ResetPassword({closeModal}) {
     const [password, setPassword] = React.useState('')
-    const [confirmPassword, setConfirmPassword] = React.useState('')
+    const [confirm_password, setConfirm_password] = React.useState('')
     const [err, setErr] = React.useState(false)
     const navigate = useNavigate()
     const axios = useAxiosPrivate()
     const { setAuth } = useAuth()
 
-    const passwordsLengthCorrect = password.length === confirmPassword.length && password.length > 7
+    const passwordsLengthCorrect = password.length === confirm_password.length && password.length > 7
 
     function comparePassword(e) {
         e.preventDefault()
 
-        if (password === confirmPassword && password.length > 7) {
+        if (password === confirm_password && password.length > 7) {
             axios
-                .post('/users/change-password/', { password, confirmPassword })
+                .post('/users/change-password/', { password, confirm_password })
                 .then(() => {
                     setPassword('')
-                    setConfirmPassword('')
+                    setConfirm_password('')
                     setAuth({})
                     closeModal()
                     navigate('/login')
@@ -66,14 +66,14 @@ export default function ResetPassword({closeModal}) {
                     </div>
                 </div>
                 <div className={`input-wrapper ${err ? 'turn-red' : ''}`}>
-                    {confirmPassword && <label className='left' htmlFor='confirm_password'>Повторите пароль</label>}
+                    {confirm_password && <label className='left' htmlFor='confirm_password'>Повторите пароль</label>}
                     <div className='input-with-eye'>
                         <input 
                             required
                             id='resetConfirm_password'
                             name='confirm_password'
                             className={`input ${err ? 'turn-red' : ''}`} 
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            onChange={(e) => setConfirm_password(e.target.value)}
                             placeholder='Повторите пароль'
                             type='password'
                             autoComplete='corrent-password'/>

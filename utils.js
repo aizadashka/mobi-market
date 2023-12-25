@@ -15,7 +15,7 @@ function isValidEmail(email) {
 
 const toastStyle = {
     position: "top-center",
-    autoClose: 5000,
+    autoClose: 2000,
     hideProgressBar: true,
     closeOnClick: true,
     closeButton: false,

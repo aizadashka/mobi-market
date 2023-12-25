@@ -16,11 +16,9 @@ export default function ForgotPassword({setPhoneVerified}) {
             .post('/users/forgot-password/', { phone })
             .then(res => {
                 setUser_id(res.data.user_id)
-                setAuth(res.data)
             })
-            .catch(error => {
-                console.log(error)
-                setErr('Не корректный номер')
+            .catch(() => {
+                setErr('Данный номер телефона не зарегистрирован')
             })
     }
 
@@ -33,11 +31,10 @@ export default function ForgotPassword({setPhoneVerified}) {
                 })
                 .then(res => {
                     setPhoneVerified(true)
-                    console.log(res)
+                    setAuth(res.data)
                 })
-                .catch(error => {
+                .catch(() => {
                     setErr('Неверный код')
-                    console.log(error)
                 })
         }, 1000)
     }
