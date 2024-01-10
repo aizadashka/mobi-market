@@ -14,7 +14,14 @@ export default function Product(props) {
                 <p className="link">{price} $</p>
                 <div className="likes-container">
                     <FaHeart 
-                        onClick={()=> toggleLike(id)}
+                        onClick={()=> {
+                            if (toggleLike) {
+                                toggleLike(id)
+                            } else {
+                                return null
+                            }
+                            
+                        }}
                         className={`like-icon ${liked_by_current_user ? 'liked' : ''}`} 
                     />
                     <span className="gray-text">{like_count}</span>

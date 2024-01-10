@@ -69,7 +69,7 @@ export default function Profile() {
     }  
 
     return (
-        <div className="container">
+        <div className="profile-container">
             <ToastContainer limit={1}/>
             <div className="auth-nav">
                 <Link to='/'><IoArrowBack />Назад</Link>

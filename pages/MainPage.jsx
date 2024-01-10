@@ -25,8 +25,8 @@ export default function MainPage() {
     const [finishRegistrationHTML, setFinishRegistrationHTML] = React.useState('')
 
     function openModal(e, id) {
-        setIsModalOpen(true)
         if (!e && !id) {
+            setIsModalOpen(true)
             setFinishRegistrationHTML(
                 <div className="modal-container">
                     <FaHeart className='icon-heart liked big'/>
@@ -38,6 +38,7 @@ export default function MainPage() {
         } else if (e.target.nodeName === 'svg' || e.target.nodeName === 'path') {
 
         } else {
+            setIsModalOpen(true)
             openProductInfo(id)
         } 
     }

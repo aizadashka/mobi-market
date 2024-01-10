@@ -4,11 +4,9 @@ import { Outlet } from "react-router-dom"
 
 export default function ProfileLayout() {
     return (
-        <>
+        <div className="site-wrapper">
             <NavBar />
-            <main>
-                { < Outlet />}
-            </main>
-        </>
+            <Outlet />
+        </div>
     )
 }
